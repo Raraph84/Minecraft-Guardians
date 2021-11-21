@@ -1,0 +1,10 @@
+{
+    "bossName": "MyBeatifulMinecraftName",
+    "bossSpace": 4,
+    "botCount": 5,
+    "botSpawnCooldown": 1,
+    "botsPrefix": "Guardian_",
+    "attackCooldown": 0.25,
+    "serverHost": "localhost",
+    "serverVersion": "1.12.2"
+}
