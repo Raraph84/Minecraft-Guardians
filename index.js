@@ -3,7 +3,6 @@ const Config = require("./config.json");
 
 const bots = [];
 
-let offset = 0;
 let target = null;
 
 const createBot = () => {
@@ -13,6 +12,7 @@ const createBot = () => {
 
 	const bot = Minecraft.createBot({
 		host: Config.serverHost,
+		port: Config.serverPort,
 		version: Config.serverVersion,
 		username: Config.botsPrefix + (bots.length + 1),
 		checkTimeoutInterval: 60 * 1000
@@ -25,15 +25,17 @@ const createBot = () => {
 
 		bot.on("entityHurt", (victim) => {
 
-			if (victim.username !== Config.bossName && !(victim.username || "").startsWith(Config.botsPrefix))
+			if (victim.username !== Config.bossName && !bots.some((bot) => bot.username === victim.username))
 				return;
 
 			const entities = Object.values(bot.entities)
-				.filter((entity) => entity.username !== Config.bossName && !(entity.username || "").startsWith(Config.botsPrefix) && entity.mobType !== "Shot arrow")
+				.filter((entity) => entity.username !== Config.bossName && !bots.some((bot) => bot.username === entity.username))
 				.sort((a, b) => (a.position.xzDistanceTo(victim.position) - b.position.xzDistanceTo(victim.position)));
 
-			if (entities[0])
+			if (entities[0]) {
 				target = entities[0];
+				console.log(victim.username + " attacked, target set to " + target.username || target.mobType);
+			}
 		});
 
 		bot.on("entityGone", (entity) => {
@@ -50,10 +52,8 @@ const createBot = () => {
 		boss = boss.entity;
 		if (!boss) return;
 
-		offset = boss.yaw;
-
-		const location = target ? target.position :
-			boss.position.offset(Math.sin(bot.direction + offset) * Config.bossSpace, 0, Math.cos(bot.direction + offset) * Config.bossSpace);
+		const location = target && target ? target.position :
+			boss.position.offset(Math.sin(bot.direction + boss.yaw) * Config.bossSpace, 0, Math.cos(bot.direction + boss.yaw) * Config.bossSpace);
 
 		bot.lookAt(location);
 

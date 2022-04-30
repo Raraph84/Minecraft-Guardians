@@ -1,0 +1,11 @@
+{
+    "serverHost": "localhost",
+    "serverPort": 25565,
+    "serverVersion": "1.12.2",
+    "bossName": "Raraph84",
+    "bossSpace": 5,
+    "botsPrefix": "Raraph",
+    "botCount": 25,
+    "botSpawnCooldown": 0.1,
+    "attackCooldown": 1
+}
